@@ -10,6 +10,7 @@ import CafeDetail from "./pages/CafeDetail";
 import StudyCheck from "./pages/StudyCheck";
 import MyPage from "./pages/MyPage";
 import Community from "./pages/Community";
+import Search from "./pages/Search";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/search" element={<Search />} />
           <Route path="/cafe/:id" element={<CafeDetail />} />
           <Route path="/study-check" element={<StudyCheck />} />
           <Route path="/community" element={<Community />} />

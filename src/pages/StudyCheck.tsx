@@ -1,17 +1,23 @@
 
 import { useState } from "react";
-import { ArrowLeft, Camera, MapPin, Clock, Upload } from "lucide-react";
+import { ArrowLeft, Camera, MapPin, Clock, Upload, CheckCircle2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 
 const StudyCheck = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [review, setReview] = useState("");
+  const [outlet, setOutlet] = useState<string>("");
+  const [noise, setNoise] = useState<string>("");
+  const [wifi, setWifi] = useState<string>("");
+  const [seat, setSeat] = useState<string>("");
   const { toast } = useToast();
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,9 +61,9 @@ const StudyCheck = () => {
   };
 
   return (
-    <div className="min-h-screen bg-cafe-gradient pb-20">
+    <div className="min-h-screen bg-white pb-20">
       {/* 헤더 */}
-      <div className="bg-white/95 backdrop-blur-md border-b border-cafe-200 sticky top-0 z-40">
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-40">
         <div className="px-4 py-3 max-w-md mx-auto">
           <div className="flex items-center gap-3">
             <Link to="/">
@@ -108,8 +114,8 @@ const StudyCheck = () => {
                   className="hidden"
                   capture="environment"
                 />
-                <div className="border-2 border-dashed border-cafe-300 rounded-xl p-8 text-center cursor-pointer hover:border-primary transition-colors">
-                  <Camera className="w-12 h-12 text-cafe-400 mx-auto mb-3" />
+                <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center cursor-pointer hover:border-primary transition-colors">
+                  <Camera className="w-12 h-12 text-gray-400 mx-auto mb-3" />
                   <p className="text-sm text-muted-foreground mb-1">공부하는 모습을 사진으로 찍어주세요</p>
                   <p className="text-xs text-muted-foreground">책상, 노트, 노트북 등이 보이면 좋아요!</p>
                 </div>
@@ -134,6 +140,88 @@ const StudyCheck = () => {
           </CardContent>
         </Card>
 
+        {/* 카페 환경 체크 */}
+        <Card>
+          <CardContent className="p-4">
+            <h3 className="font-semibold mb-4 flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-primary" />
+              카페 환경 체크
+            </h3>
+            
+            {/* 콘센트 */}
+            <div className="space-y-3 mb-4">
+              <Label className="text-sm font-medium">콘센트</Label>
+              <RadioGroup value={outlet} onValueChange={setOutlet}>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="available" id="outlet-yes" />
+                  <Label htmlFor="outlet-yes" className="text-sm">콘센트 사용 가능</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="unavailable" id="outlet-no" />
+                  <Label htmlFor="outlet-no" className="text-sm">콘센트 사용 불가</Label>
+                </div>
+              </RadioGroup>
+            </div>
+
+            {/* 소음 */}
+            <div className="space-y-3 mb-4">
+              <Label className="text-sm font-medium">소음 정도</Label>
+              <RadioGroup value={noise} onValueChange={setNoise}>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="quiet" id="noise-quiet" />
+                  <Label htmlFor="noise-quiet" className="text-sm">조용함</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="normal" id="noise-normal" />
+                  <Label htmlFor="noise-normal" className="text-sm">보통</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="noisy" id="noise-noisy" />
+                  <Label htmlFor="noise-noisy" className="text-sm">시끄러움</Label>
+                </div>
+              </RadioGroup>
+            </div>
+
+            {/* 와이파이 */}
+            <div className="space-y-3 mb-4">
+              <Label className="text-sm font-medium">와이파이</Label>
+              <RadioGroup value={wifi} onValueChange={setWifi}>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="fast" id="wifi-fast" />
+                  <Label htmlFor="wifi-fast" className="text-sm">빠름</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="normal" id="wifi-normal" />
+                  <Label htmlFor="wifi-normal" className="text-sm">보통</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="slow" id="wifi-slow" />
+                  <Label htmlFor="wifi-slow" className="text-sm">느림</Label>
+                </div>
+              </RadioGroup>
+            </div>
+
+            {/* 좌석 */}
+            <div className="space-y-3">
+              <Label className="text-sm font-medium">좌석 상황</Label>
+              <RadioGroup value={seat} onValueChange={setSeat}>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="spacious" id="seat-spacious" />
+                  <Label htmlFor="seat-spacious" className="text-sm">여유로움</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="normal" id="seat-normal" />
+                  <Label htmlFor="seat-normal" className="text-sm">보통</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="crowded" id="seat-crowded" />
+                  <Label htmlFor="seat-crowded" className="text-sm">붐빔</Label>
+                </div>
+              </RadioGroup>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* 간단 후기 */}
         <Card>
           <CardContent className="p-4">
@@ -142,16 +230,16 @@ const StudyCheck = () => {
               placeholder="오늘 이 카페에서 공부한 느낌을 간단히 남겨보세요! 다른 카공족들에게 도움이 될 거예요."
               value={review}
               onChange={(e) => setReview(e.target.value)}
-              className="min-h-[80px] bg-white/70 backdrop-blur-sm border-cafe-200"
+              className="min-h-[80px] bg-white border-gray-200"
             />
             <p className="text-xs text-muted-foreground mt-2">
-              💡 콘센트 위치, 조용함 정도, 좌석 정보 등을 공유해주세요!
+              💡 개인적인 팁이나 추천사항을 공유해주세요!
             </p>
           </CardContent>
         </Card>
 
         {/* 예상 리워드 */}
-        <Card className="bg-gradient-to-r from-study-50 to-cafe-50">
+        <Card className="bg-gradient-to-r from-blue-50 to-purple-50">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>

@@ -1,5 +1,5 @@
 
-import { Calendar, Star, Trophy, MapPin, Camera, TrendingUp, MessageCircle } from "lucide-react";
+import { Calendar, Star, Trophy, MapPin, Camera, MessageCircle } from "lucide-react";
 import Header from "@/components/Header";
 import BottomNavigation from "@/components/BottomNavigation";
 import { Card, CardContent } from "@/components/ui/card";
@@ -17,7 +17,6 @@ const MyPage = () => {
     totalStudyTime: "183시간",
     favoritesCafes: 12,
     writtenReviews: 28,
-    streak: 7, // 연속 카공 일수
     badges: [
       { name: "카공 마스터", icon: "🏆", description: "30일 연속 카공 달성" },
       { name: "리뷰왕", icon: "✍️", description: "리뷰 20개 작성" },
@@ -99,14 +98,6 @@ const MyPage = () => {
           
           <Card className="bg-white border-gray-200">
             <CardContent className="p-4 text-center">
-              <TrendingUp className="w-6 h-6 text-green-600 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-foreground">{user.streak}</div>
-              <div className="text-xs text-muted-foreground">연속 카공 일수</div>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-white border-gray-200">
-            <CardContent className="p-4 text-center">
               <MapPin className="w-6 h-6 text-orange-600 mx-auto mb-2" />
               <div className="text-2xl font-bold text-foreground">{user.favoritesCafes}</div>
               <div className="text-xs text-muted-foreground">즐겨찾는 카페</div>
@@ -118,6 +109,14 @@ const MyPage = () => {
               <Star className="w-6 h-6 text-yellow-500 mx-auto mb-2" />
               <div className="text-2xl font-bold text-foreground">{user.writtenReviews}</div>
               <div className="text-xs text-muted-foreground">작성한 리뷰</div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-white border-gray-200">
+            <CardContent className="p-4 text-center">
+              <MessageCircle className="w-6 h-6 text-blue-500 mx-auto mb-2" />
+              <div className="text-2xl font-bold text-foreground">12</div>
+              <div className="text-xs text-muted-foreground">커뮤니티 글</div>
             </CardContent>
           </Card>
         </div>
