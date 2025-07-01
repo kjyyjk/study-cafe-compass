@@ -23,14 +23,13 @@ const CafeDetail = () => {
   const { id } = useParams();
   const [isSaved, setIsSaved] = useState(false);
 
-  // 더미 데이터 
+  // 더미 데이터 - studyScore를 rating으로 변경
   const cafe = {
     id,
     name: "스타벅스 강남점",
     address: "서울 강남구 테헤란로 123",
     phone: "02-1234-5678",
     rating: 4.3,
-    studyScore: 85,
     distance: "200m",
     crowdLevel: "medium",
     images: [
@@ -143,7 +142,6 @@ const CafeDetail = () => {
                   <Star className="w-4 h-4 fill-current" />
                   <span className="font-semibold">{cafe.rating}</span>
                 </div>
-                <Badge className="mt-1 study-badge">카공점수 {cafe.studyScore}</Badge>
               </div>
             </div>
             

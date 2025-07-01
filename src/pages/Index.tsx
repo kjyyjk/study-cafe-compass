@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge";
 const Index = () => {
   const [activeTab, setActiveTab] = useState<"nearby" | "saved">("nearby");
 
-  // 더미 데이터
+  // 더미 데이터 - rating을 평균 별점으로 변경
   const nearbyCafes = [
     {
       id: "1",
@@ -19,7 +19,6 @@ const Index = () => {
       address: "서울 강남구 테헤란로",
       distance: "200m",
       rating: 4.3,
-      studyScore: 85,
       features: ["wifi", "outlet", "quiet"],
       crowdLevel: "medium" as const,
       imageUrl: "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=100&h=100&fit=crop"
@@ -29,8 +28,7 @@ const Index = () => {
       name: "카페베네 역삼점",
       address: "서울 강남구 역삼동",
       distance: "350m",
-      rating: 4.1,
-      studyScore: 92,
+      rating: 4.6,
       features: ["wifi", "outlet"],
       crowdLevel: "low" as const,
       imageUrl: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=100&h=100&fit=crop"
@@ -41,7 +39,6 @@ const Index = () => {
       address: "서울 강남구 선릉로",
       distance: "500m",
       rating: 4.0,
-      studyScore: 78,
       features: ["wifi", "quiet"],
       crowdLevel: "high" as const,
       imageUrl: "https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=100&h=100&fit=crop"
@@ -55,7 +52,6 @@ const Index = () => {
       address: "서울 강남구 청담동",
       distance: "1.2km", 
       rating: 4.5,
-      studyScore: 88,
       features: ["wifi", "outlet", "quiet"],
       crowdLevel: "low" as const,
       imageUrl: "https://images.unsplash.com/photo-1559925393-8be0ec4767c8?w=100&h=100&fit=crop"

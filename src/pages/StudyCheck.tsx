@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { ArrowLeft, Camera, MapPin, Clock, Upload, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Camera, MapPin, Clock, Upload, CheckCircle2, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -18,6 +18,8 @@ const StudyCheck = () => {
   const [noise, setNoise] = useState<string>("");
   const [wifi, setWifi] = useState<string>("");
   const [seat, setSeat] = useState<string>("");
+  const [rating, setRating] = useState<number>(0);
+  const [hoveredRating, setHoveredRating] = useState<number>(0);
   const { toast } = useToast();
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,6 +38,15 @@ const StudyCheck = () => {
       toast({
         title: "사진을 업로드해주세요",
         description: "카공 인증을 위해 공부 사진이 필요해요",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (rating === 0) {
+      toast({
+        title: "별점을 선택해주세요",
+        description: "카페에 대한 평가를 남겨주세요",
         variant: "destructive"
       });
       return;
@@ -137,6 +148,48 @@ const StudyCheck = () => {
                 </Button>
               </div>
             )}
+          </CardContent>
+        </Card>
+
+        {/* 카페 별점 평가 */}
+        <Card>
+          <CardContent className="p-4">
+            <h3 className="font-semibold mb-4 flex items-center gap-2">
+              <Star className="w-4 h-4 text-primary" />
+              카페 별점 평가
+            </h3>
+            
+            <div className="text-center">
+              <p className="text-sm text-muted-foreground mb-3">이 카페는 어떠셨나요?</p>
+              <div className="flex items-center justify-center gap-1 mb-2">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button
+                    key={star}
+                    onClick={() => setRating(star)}
+                    onMouseEnter={() => setHoveredRating(star)}
+                    onMouseLeave={() => setHoveredRating(0)}
+                    className="p-1 transition-colors"
+                  >
+                    <Star 
+                      className={`w-8 h-8 ${
+                        star <= (hoveredRating || rating) 
+                          ? "fill-yellow-400 text-yellow-400" 
+                          : "text-gray-300"
+                      }`}
+                    />
+                  </button>
+                ))}
+              </div>
+              {rating > 0 && (
+                <p className="text-sm font-medium text-primary">
+                  {rating === 1 && "아쉬워요"}
+                  {rating === 2 && "별로예요"}
+                  {rating === 3 && "보통이에요"}
+                  {rating === 4 && "좋아요"}
+                  {rating === 5 && "최고예요"}
+                </p>
+              )}
+            </div>
           </CardContent>
         </Card>
 

@@ -9,7 +9,7 @@ interface CafeCardProps {
   address: string;
   distance: string;
   rating: number;
-  studyScore: number;
+  studyScore?: number; // 사용자 개인 점수 (선택적)
   features: string[];
   crowdLevel: "low" | "medium" | "high";
   imageUrl?: string;
@@ -21,7 +21,6 @@ const CafeCard = ({
   address, 
   distance, 
   rating, 
-  studyScore, 
   features, 
   crowdLevel,
   imageUrl 
@@ -88,9 +87,6 @@ const CafeCard = ({
                 <div className="cafe-rating">
                   <Star className="w-3 h-3 fill-current" />
                   <span className="font-medium">{rating}</span>
-                </div>
-                <div className="study-badge">
-                  카공점수 {studyScore}
                 </div>
               </div>
               
