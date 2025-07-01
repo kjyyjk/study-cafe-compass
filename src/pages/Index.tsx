@@ -65,7 +65,7 @@ const Index = () => {
   const popularTags = ["조용한", "콘센트많음", "24시간", "넓은테이블", "와이파이빠름"];
 
   return (
-    <div className="min-h-screen bg-cafe-gradient pb-20">
+    <div className="min-h-screen bg-white pb-20">
       <Header 
         title="카공로그" 
         location="강남구 역삼동"
@@ -77,7 +77,7 @@ const Index = () => {
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
           <Input 
             placeholder="카페 이름이나 지역을 검색해보세요"
-            className="pl-10 bg-white/70 backdrop-blur-sm border-cafe-200"
+            className="pl-10 bg-gray-50 border-gray-200"
           />
         </div>
 
@@ -86,7 +86,7 @@ const Index = () => {
           <h3 className="text-sm font-medium text-foreground">인기 검색 태그</h3>
           <div className="flex flex-wrap gap-2">
             {popularTags.map((tag) => (
-              <Badge key={tag} variant="secondary" className="bg-white/60 text-cafe-700 hover:bg-white/80">
+              <Badge key={tag} variant="secondary" className="bg-gray-100 text-gray-700 hover:bg-gray-200">
                 #{tag}
               </Badge>
             ))}
@@ -94,7 +94,7 @@ const Index = () => {
         </div>
 
         {/* 탭 메뉴 */}
-        <div className="flex bg-white/60 backdrop-blur-sm rounded-xl p-1">
+        <div className="flex bg-gray-50 rounded-xl p-1">
           <Button
             variant={activeTab === "nearby" ? "default" : "ghost"}
             size="sm"

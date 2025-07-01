@@ -10,15 +10,15 @@ interface HeaderProps {
 
 const Header = ({ title, location, showNotification = true }: HeaderProps) => {
   return (
-    <header className="bg-white/95 backdrop-blur-md border-b border-cafe-200 sticky top-0 z-40">
+    <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
       <div className="px-4 py-3 max-w-md mx-auto">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-xl font-bold text-foreground">{title}</h1>
             {location && (
               <div className="flex items-center gap-1 mt-1">
-                <MapPin className="w-4 h-4 text-cafe-600" />
-                <span className="text-sm text-cafe-600">{location}</span>
+                <MapPin className="w-4 h-4 text-gray-600" />
+                <span className="text-sm text-gray-600">{location}</span>
               </div>
             )}
           </div>
