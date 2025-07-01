@@ -1,73 +1,151 @@
-# Welcome to your Lovable project
+# 배포 링크
+https://study-cafe-compass.lovable.app/
 
-## Project info
+# 👤 사용자 페르소나
 
-**URL**: https://lovable.dev/projects/e052fc03-191d-4ebc-8835-7195e6627154
+## 🎯 페르소나: 김세윤 (25세, 관악구 대학생 카공족)
 
-## How can I edit this code?
+김세윤은 서울 관악구에 거주하는 25세 대학생으로, 졸업을 앞두고 시험을 준비 중이다.  
+평일에는 도서관이나 학교에서 공부하지만, 주말마다는 분위기를 바꿔 카페에서 집중하려고 한다.  
+그러나 항상 자리가 없는 카페를 전전하며 시간을 낭비하는 일이 반복되고 있다.
 
-There are several ways of editing your application.
+- **직업**: 대학생 (졸업 예정, 시험 준비 중)
+- **거주지**: 서울 관악구
+- **라이프스타일**: 평일엔 학교/도서관, 주말엔 카페를 돌아다니며 공부
+- **목표**: 주말마다 공부하기 좋으며 자리가 있는 카페를 빠르게 찾기
+- **니즈**:
+  - 현재 카페에 자리가 있는지 실시간 정보 확인
+- **페인 포인트**:
+  - 주말마다 자리가 없는 카페를 돌아다니며 시간과 체력 낭비
+  - 기존 포털의 리뷰는 카공 관점 정보 부족
 
-**Use Lovable**
+### 🧭 사용자 흐름
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/e052fc03-191d-4ebc-8835-7195e6627154) and start prompting.
+1. 스마트폰으로 **‘카공로그’ 앱 실행**
+2. 홈 화면에서 **“저장한 카페”** 버튼 클릭
+3. 저장한 카페에서 자주 가는 카페의 **상세 페이지 조회**
+4. **최근 리뷰**와 **시간대별 평균 혼잡도**를 확인하여 정보 파악
+5. 조건에 맞는 경우 **카페 방문 및 공부 시작**
+6. 공부 후 앱에서 **카공 활동 인증 및 리뷰 작성**
+7. 리뷰 작성 완료 시, **카공 점수 및 카페 점수 획득 (마이페이지 반영)**
 
-Changes made via Lovable will be committed automatically to this repo.
 
-**Use your preferred IDE**
+### 🗣 사용자 스토리
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+> “공부하러 갈 때마다 카페 자리가 있을지 몰라서 불안했어요.  
+> 이제는 앱으로 미리 분위기랑 혼잡도를 확인할 수 있으니까  
+> 여러 군데 돌아다니지 않고 바로 집중할 수 있어서 너무 좋아요.”
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
-Follow these steps:
+### ✅ 인수 조건 (Acceptance Criteria)
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+- **Given**: 사용자가 ‘카공로그’ 앱에 로그인한 상태에서
+- **And**: 홈 화면에서 “저장한 카페” 기능을 사용할 수 있을 때
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+- **When**: 사용자가 “저장한 카페” 버튼을 클릭하고, 특정 카페의 상세 페이지에 진입하면
+- **Then**:  
+  - 해당 카페의 **최근 24시간 이내 리뷰 목록**이 3초 이내에 표시되고  
+  - **시간대별 평균 혼잡도 정보**가 시각적으로 제공된다
 
-# Step 3: Install the necessary dependencies.
-npm i
+- **And When**: 사용자가 해당 카페에 방문하여 **카공 활동 인증 및 리뷰를 작성**하면
+- **Then**:  
+  - 리뷰가 해당 카페 페이지에 즉시 반영되며  
+  - 사용자의 **카공 점수** 및 해당 **카페 점수**가 누적되어 마이페이지에 반영된다
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+---
 
-**Edit a file directly in GitHub**
+## 🎯 페르소나: 지민혁 (27세, 고양시 거주 취준생 카공족)
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+지민혁은 고양시에 거주 중인 27세 취업 준비생으로, 평소에도 카페에서 공부하는 것을 좋아한다.  
+스터디 모임이나 친구들과 만남이 있을 때는 약속보다 일찍 도착해서, 근처 카페에서 미리 공부를 하며 시간을 보내곤 한다.  
+하지만 약속 장소가 서울이나 타지역일 때는 **초행길이라 공부하기 좋은 카페를 찾기 어렵고**, 헛걸음하는 경우도 많다.
 
-**Use GitHub Codespaces**
+- **직업**: 취업 준비생  
+- **거주지**: 경기도 고양시  
+- **라이프스타일**: 서울 등 타지역 자주 방문, 카페에서 미리 공부하는 습관  
+- **목표**: 낯선 지역에서도 공부하기 좋은 카페를 쉽게 찾아 효율적으로 활용  
+- **니즈**:
+  - 낯선 지역에서 '카공하기 좋은' 카페를 빠르게 찾기
+  - 실제 사용자의 후기 및 조용함 정도, 좌석 정보, 혼잡도 파악
+  - 나중에 다시 방문할 수 있도록 저장 기능
+- **페인 포인트**:
+  - 초행 지역에서 포털 검색만으로는 분위기 파악이 어렵고 낭비되는 시간 많음
+  - 체인점 중심의 검색 결과로 인해 지역 밀착 정보 부족
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
 
-## What technologies are used for this project?
+### 🧭 사용자 흐름
 
-This project is built with:
+1. 스마트폰으로 **‘카공로그’ 앱 실행**  
+2. 약속 장소 도착 후, 해당 위치 기반으로 **카페 탐색 지역 설정**  
+3. 설정된 지역 내 **카공 추천 카페 목록 조회**  
+4. 각 카페의 **리뷰**와 **조용함/혼잡도/좌석 정보** 등을 확인  
+5. 마음에 드는 카페를 선택해 **방문 및 공부 시작**  
+6. 공부 후, **리뷰 및 활동 인증을 통해 점수 획득 + 즐겨찾기 등록**
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
 
-## How can I deploy this project?
+### 🗣 사용자 스토리
 
-Simply open [Lovable](https://lovable.dev/projects/e052fc03-191d-4ebc-8835-7195e6627154) and click on Share -> Publish.
+> “스터디나 약속 때문에 자주 서울에 가는데, 어디서 공부할지 몰라 헤맨 적이 많아요.  
+> 이젠 지역만 설정하면 바로 공부하기 좋은 카페를 찾을 수 있어서  
+> 낯선 동네에서도 내 공부 루틴을 유지할 수 있게 됐어요.”
 
-## Can I connect a custom domain to my Lovable project?
 
-Yes, you can!
+### ✅ 인수 조건 (Acceptance Criteria)
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+- **Given**: 사용자가 타지역에 도착해 앱을 실행하고 지역을 검색한 상태  
+- **When**: 해당 지역에서 “카공하기 좋은 카페 보기”를 선택했을 때  
+- **Then**:  
+  - 위치 기반 카페 리스트와 실사용자 리뷰/혼잡도 정보가 3초 이내에 표시됨  
+  - 카페 즐겨찾기 등록 및 방문 후 리뷰 작성과 카공 점수 획득이 가능함
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+
+---
+
+
+## 🎯 페르소나: 이해송 (30세, 서울 거주 직장인)
+
+이해송은 서울에 거주하는 30세 직장인으로, 매일 퇴근 후 카페에서 약 2시간 정도 개인 학습을 한다.  
+꾸준한 자기계발을 위해 자기주도 학습 루틴을 만들고 싶어하며, 혼자 공부하면서도 **같이 공부하는 동료들의 연대감과 동기 부여**를 중요하게 생각한다.  
+특히 공부 인증을 통해 성취감을 느끼고, 카공 점수를 쌓아 자신의 노력을 시각적으로 확인하는 것을 목표로 한다.
+
+- **직업**: 직장인  
+- **거주지**: 서울  
+- **라이프스타일**: 퇴근 후 카페에서 개인 학습, 꾸준한 자기계발 지향  
+- **목표**: 지속적인 학습 습관 유지 및 동료들과의 연대감 형성  
+- **니즈**:
+  - 간편하게 오늘 공부를 인증할 수 있는 기능 (사진 기반 인증)
+  - 인증 시 카공 점수 획득으로 동기 부여
+  - 타이머 기능 없이 편하게 인증할 수 있는 환경  
+  - 다른 사용자들의 카공 인증 현황을 통해 연대감 경험
+- **페인 포인트**:
+  - 공부 시간을 직접 재거나 관리하는 타이머 기능은 번거롭고 부담스러움  
+  - 혼자 공부할 때 느끼는 고립감과 동기 저하  
+  - 인증이 복잡하거나 번거로우면 꾸준히 사용하기 어려움
+
+
+### 🧭 사용자 흐름
+
+1. 퇴근 후 스마트폰으로 **‘카공로그’ 앱 실행**  
+2. 카페에서 공부를 시작하고, 공부 인증을 위해 **사진 촬영 및 간편 업로드**  
+3. 인증 완료 후, **카공 점수 자동 부여** 및 내 프로필에 기록  
+4. 다른 사용자들의 인증 현황이나 점수 랭킹을 확인하며 **연대감과 동기 부여 강화**  
+5. 꾸준한 인증으로 학습 루틴을 유지하고 성취감을 쌓음  
+
+
+### 🗣 사용자 스토리
+
+> “퇴근 후 무거운 몸을 이끌고 카페에 와서 공부하는 게 쉽지 않은데,  
+> ‘카공로그’ 앱에서 사진 한 장으로 오늘의 공부를 인증하면  
+> 내 노력이 점수로 쌓이고, 다른 사람들과 함께하는 기분도 들어서 꾸준히 하게 돼요.  
+
+
+### ✅ 인수 조건 (Acceptance Criteria)
+
+- **Given**: 사용자가 퇴근 후 카페에 도착해 ‘카공로그’ 앱을 실행한 상태  
+- **When**: 사용자가 오늘 공부 인증을 위해 사진을 촬영하고 업로드했을 때  
+- **Then**:  
+  - 사진 기반 인증이 3초 이내에 완료되고 카공 점수가 즉시 부여됨  
+  - 인증 내역이 사용자 프로필에 기록되어 확인 가능함  
+  - 다른 사용자의 인증 현황이나 점수 랭킹을 실시간으로 조회할 수 있음  
+  - 간편하게 인증할 수 있는 UI/UX 제공됨
+ 
