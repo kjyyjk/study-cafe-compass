@@ -1,5 +1,4 @@
 
-
 import { useState } from "react";
 import { Search, MapPin, Star, Filter } from "lucide-react";
 import Header from "@/components/Header";
@@ -21,40 +20,48 @@ const SearchPage = () => {
       name: "스타벅스 강남점",
       address: "서울 강남구 테헤란로",
       distance: "200m",
+      distanceInMeters: 200,
       rating: 4.3,
       features: ["wifi", "outlet", "quiet"],
       crowdLevel: "medium" as const,
-      imageUrl: "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=100&h=100&fit=crop"
+      imageUrl: "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=100&h=100&fit=crop",
+      lastReviewDate: new Date('2024-07-02T10:00:00')
     },
     {
       id: "2", 
       name: "카페베네 역삼점",
       address: "서울 강남구 역삼동",
       distance: "350m",
+      distanceInMeters: 350,
       rating: 4.6,
       features: ["wifi", "outlet"],
       crowdLevel: "low" as const,
-      imageUrl: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=100&h=100&fit=crop"
+      imageUrl: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=100&h=100&fit=crop",
+      lastReviewDate: new Date('2024-07-02T14:30:00')
     },
     {
       id: "3",
       name: "이디야커피 선릉점", 
       address: "서울 강남구 선릉로",
       distance: "500m",
+      distanceInMeters: 500,
       rating: 4.0,
       features: ["wifi", "quiet"],
       crowdLevel: "high" as const,
-      imageUrl: "https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=100&h=100&fit=crop"
+      imageUrl: "https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=100&h=100&fit=crop",
+      lastReviewDate: new Date('2024-07-01T16:20:00')
     },
     {
       id: "4",
       name: "투썸플레이스 청담점",
       address: "서울 강남구 청담동",
       distance: "1.2km", 
+      distanceInMeters: 1200,
       rating: 4.5,
       features: ["wifi", "outlet", "quiet"],
       crowdLevel: "low" as const,
-      imageUrl: "https://images.unsplash.com/photo-1559925393-8be0ec4767c8?w=100&h=100&fit=crop"
+      imageUrl: "https://images.unsplash.com/photo-1559925393-8be0ec4767c8?w=100&h=100&fit=crop",
+      lastReviewDate: new Date('2024-07-02T09:15:00')
     }
   ];
 
@@ -70,10 +77,12 @@ const SearchPage = () => {
       return b.rating - a.rating;
     }
     if (activeFilter === "distance") {
-      // 거리 정렬 (단순화)
-      return parseInt(a.distance) - parseInt(b.distance);
+      return a.distanceInMeters - b.distanceInMeters;
     }
-    return 0; // recent는 현재 순서 유지
+    if (activeFilter === "recent") {
+      return b.lastReviewDate.getTime() - a.lastReviewDate.getTime();
+    }
+    return 0;
   });
 
   return (
@@ -140,7 +149,7 @@ const SearchPage = () => {
             className="flex items-center gap-1"
           >
             <Filter className="w-3 h-3" />
-            최신순
+            최근 리뷰순
           </Button>
         </div>
 
@@ -162,7 +171,7 @@ const SearchPage = () => {
           <div className="text-center py-12 text-muted-foreground">
             <Search className="w-12 h-12 mx-auto mb-3 opacity-30" />
             <p>검색 결과가 없어요</p>
-            <p className="text-sm">다른 키워드로 검색해보세요</p>
+            <p className="text-xs">다른 키워드로 검색해보세요</p>
           </div>
         )}
       </div>
@@ -173,4 +182,3 @@ const SearchPage = () => {
 };
 
 export default SearchPage;
-

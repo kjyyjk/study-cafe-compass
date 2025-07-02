@@ -1,26 +1,50 @@
 
 import { useState } from "react";
-import { ArrowLeft, Camera, MapPin, Clock, Upload, CheckCircle2, Star } from "lucide-react";
-import { Link } from "react-router-dom";
+import { ArrowLeft, Camera, MapPin, Clock, Upload, CheckCircle2, Star, Search, ChevronDown } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 
 const StudyCheck = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [review, setReview] = useState("");
+  const [rating, setRating] = useState<number>(0);
+  const [hoveredRating, setHoveredRating] = useState<number>(0);
+  const [showCafeSearch, setShowCafeSearch] = useState(false);
+  const [cafeSearchQuery, setCafeSearchQuery] = useState("");
+  const [selectedCafe, setSelectedCafe] = useState({
+    name: "스타벅스 강남점",
+    address: "서울 강남구 테헤란로 123",
+    isVerified: true
+  });
+  const [selectedTime, setSelectedTime] = useState(new Date());
+  const [showTimeSelect, setShowTimeSelect] = useState(false);
+  
+  // 환경 체크 상태들
   const [outlet, setOutlet] = useState<string>("");
   const [noise, setNoise] = useState<string>("");
   const [wifi, setWifi] = useState<string>("");
   const [seat, setSeat] = useState<string>("");
-  const [rating, setRating] = useState<number>(0);
-  const [hoveredRating, setHoveredRating] = useState<number>(0);
+  
   const { toast } = useToast();
+  const navigate = useNavigate();
+
+  // 더미 카페 검색 결과
+  const searchResults = [
+    { id: "1", name: "스타벅스 강남점", address: "서울 강남구 테헤란로 123" },
+    { id: "2", name: "카페베네 역삼점", address: "서울 강남구 역삼동 456" },
+    { id: "3", name: "이디야커피 선릉점", address: "서울 강남구 선릉로 789" },
+  ];
+
+  const filteredCafes = searchResults.filter(cafe => 
+    cafe.name.toLowerCase().includes(cafeSearchQuery.toLowerCase()) ||
+    cafe.address.toLowerCase().includes(cafeSearchQuery.toLowerCase())
+  );
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -31,6 +55,39 @@ const StudyCheck = () => {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleCafeSelect = (cafe: any) => {
+    setSelectedCafe({
+      name: cafe.name,
+      address: cafe.address,
+      isVerified: true
+    });
+    setShowCafeSearch(false);
+    setCafeSearchQuery("");
+  };
+
+  // 15분 단위 시간 생성
+  const generateTimeOptions = () => {
+    const options = [];
+    const now = new Date();
+    for (let i = 0; i < 96; i++) { // 24시간 * 4 (15분 단위)
+      const time = new Date(now);
+      time.setMinutes(time.getMinutes() - (i * 15));
+      options.push(time);
+    }
+    return options;
+  };
+
+  const timeOptions = generateTimeOptions();
+
+  const formatTime = (date: Date) => {
+    return date.toLocaleString('ko-KR', {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   };
 
   const handleSubmit = async () => {
@@ -61,14 +118,9 @@ const StudyCheck = () => {
         title: "카공 인증 완료! 🎉",
         description: "카공 점수 10점을 획득했어요!",
       });
+      // 홈페이지로 이동
+      navigate("/");
     }, 2000);
-  };
-
-  // 현재 위치 더미 데이터
-  const currentLocation = {
-    cafe: "스타벅스 강남점",
-    address: "서울 강남구 테헤란로 123",
-    isVerified: true
   };
 
   return (
@@ -88,23 +140,104 @@ const StudyCheck = () => {
       </div>
 
       <div className="px-4 py-4 max-w-md mx-auto space-y-4">
-        {/* 현재 위치 */}
+        {/* 카페 선택 */}
         <Card>
           <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
-                <MapPin className="w-5 h-5 text-primary" />
-              </div>
-              <div className="flex-1">
-                <div className="flex items-center gap-2">
-                  <h3 className="font-semibold text-foreground">{currentLocation.cafe}</h3>
-                  {currentLocation.isVerified && (
-                    <Badge className="bg-green-100 text-green-700">위치 확인됨</Badge>
-                  )}
-                </div>
-                <p className="text-sm text-muted-foreground">{currentLocation.address}</p>
-              </div>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-semibold flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-primary" />
+                카페 선택
+              </h3>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => setShowCafeSearch(!showCafeSearch)}
+              >
+                <Search className="w-3 h-3 mr-1" />
+                변경
+              </Button>
             </div>
+            
+            {!showCafeSearch ? (
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                  <MapPin className="w-5 h-5 text-primary" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <h4 className="font-semibold text-foreground">{selectedCafe.name}</h4>
+                    {selectedCafe.isVerified && (
+                      <Badge className="bg-green-100 text-green-700">위치 확인됨</Badge>
+                    )}
+                  </div>
+                  <p className="text-sm text-muted-foreground">{selectedCafe.address}</p>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                <Input
+                  placeholder="카페 이름이나 주소를 검색하세요"
+                  value={cafeSearchQuery}
+                  onChange={(e) => setCafeSearchQuery(e.target.value)}
+                  className="w-full"
+                />
+                <div className="max-h-40 overflow-y-auto space-y-2">
+                  {filteredCafes.map((cafe) => (
+                    <div
+                      key={cafe.id}
+                      className="p-3 border rounded-lg cursor-pointer hover:bg-gray-50"
+                      onClick={() => handleCafeSelect(cafe)}
+                    >
+                      <h4 className="font-medium">{cafe.name}</h4>
+                      <p className="text-sm text-muted-foreground">{cafe.address}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* 시간 선택 */}
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-semibold flex items-center gap-2">
+                <Clock className="w-4 h-4 text-primary" />
+                카공 시간
+              </h3>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => setShowTimeSelect(!showTimeSelect)}
+              >
+                <ChevronDown className="w-3 h-3 mr-1" />
+                변경
+              </Button>
+            </div>
+            
+            {!showTimeSelect ? (
+              <p className="text-sm text-muted-foreground">{formatTime(selectedTime)}</p>
+            ) : (
+              <div className="max-h-40 overflow-y-auto space-y-1">
+                {timeOptions.map((time, index) => (
+                  <div
+                    key={index}
+                    className={`p-2 rounded cursor-pointer text-sm ${
+                      selectedTime.getTime() === time.getTime() 
+                        ? 'bg-primary text-primary-foreground' 
+                        : 'hover:bg-gray-50'
+                    }`}
+                    onClick={() => {
+                      setSelectedTime(time);
+                      setShowTimeSelect(false);
+                    }}
+                  >
+                    {formatTime(time)}
+                  </div>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -203,74 +336,89 @@ const StudyCheck = () => {
             
             {/* 콘센트 */}
             <div className="space-y-3 mb-4">
-              <Label className="text-sm font-medium">콘센트</Label>
-              <RadioGroup value={outlet} onValueChange={setOutlet}>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="available" id="outlet-yes" />
-                  <Label htmlFor="outlet-yes" className="text-sm">콘센트 사용 가능</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="unavailable" id="outlet-no" />
-                  <Label htmlFor="outlet-no" className="text-sm">콘센트 사용 불가</Label>
-                </div>
-              </RadioGroup>
+              <h4 className="text-sm font-medium">콘센트</h4>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  { value: "available", label: "콘센트 사용 가능" },
+                  { value: "unavailable", label: "콘센트 사용 불가" },
+                  { value: "limited", label: "콘센트 좌석 여유" },
+                  { value: "full", label: "콘센트 좌석 없음" }
+                ].map((option) => (
+                  <Button
+                    key={option.value}
+                    variant={outlet === option.value ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setOutlet(outlet === option.value ? "" : option.value)}
+                  >
+                    {option.label}
+                  </Button>
+                ))}
+              </div>
             </div>
 
             {/* 소음 */}
             <div className="space-y-3 mb-4">
-              <Label className="text-sm font-medium">소음 정도</Label>
-              <RadioGroup value={noise} onValueChange={setNoise}>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="quiet" id="noise-quiet" />
-                  <Label htmlFor="noise-quiet" className="text-sm">조용함</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="normal" id="noise-normal" />
-                  <Label htmlFor="noise-normal" className="text-sm">보통</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="noisy" id="noise-noisy" />
-                  <Label htmlFor="noise-noisy" className="text-sm">시끄러움</Label>
-                </div>
-              </RadioGroup>
+              <h4 className="text-sm font-medium">소음 정도</h4>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  { value: "quiet", label: "조용함" },
+                  { value: "normal", label: "보통" },
+                  { value: "noisy", label: "시끄러움" }
+                ].map((option) => (
+                  <Button
+                    key={option.value}
+                    variant={noise === option.value ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setNoise(noise === option.value ? "" : option.value)}
+                  >
+                    {option.label}
+                  </Button>
+                ))}
+              </div>
             </div>
 
             {/* 와이파이 */}
             <div className="space-y-3 mb-4">
-              <Label className="text-sm font-medium">와이파이</Label>
-              <RadioGroup value={wifi} onValueChange={setWifi}>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="fast" id="wifi-fast" />
-                  <Label htmlFor="wifi-fast" className="text-sm">빠름</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="normal" id="wifi-normal" />
-                  <Label htmlFor="wifi-normal" className="text-sm">보통</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="slow" id="wifi-slow" />
-                  <Label htmlFor="wifi-slow" className="text-sm">느림</Label>
-                </div>
-              </RadioGroup>
+              <h4 className="text-sm font-medium">와이파이</h4>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  { value: "fast", label: "빠름" },
+                  { value: "normal", label: "보통" },
+                  { value: "slow", label: "느림" }
+                ].map((option) => (
+                  <Button
+                    key={option.value}
+                    variant={wifi === option.value ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setWifi(wifi === option.value ? "" : option.value)}
+                  >
+                    {option.label}
+                  </Button>
+                ))}
+              </div>
             </div>
 
             {/* 좌석 */}
             <div className="space-y-3">
-              <Label className="text-sm font-medium">좌석 상황</Label>
-              <RadioGroup value={seat} onValueChange={setSeat}>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="spacious" id="seat-spacious" />
-                  <Label htmlFor="seat-spacious" className="text-sm">여유로움</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="normal" id="seat-normal" />
-                  <Label htmlFor="seat-normal" className="text-sm">보통</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="crowded" id="seat-crowded" />
-                  <Label htmlFor="seat-crowded" className="text-sm">붐빔</Label>
-                </div>
-              </RadioGroup>
+              <h4 className="text-sm font-medium">좌석 상황</h4>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  { value: "spacious", label: "여유로움" },
+                  { value: "normal", label: "보통" },
+                  { value: "crowded", label: "붐빔" },
+                  { value: "comfortable", label: "편안한 좌석" },
+                  { value: "uncomfortable", label: "불편한 좌석" }
+                ].map((option) => (
+                  <Button
+                    key={option.value}
+                    variant={seat === option.value ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setSeat(seat === option.value ? "" : option.value)}
+                  >
+                    {option.label}
+                  </Button>
+                ))}
+              </div>
             </div>
           </CardContent>
         </Card>
