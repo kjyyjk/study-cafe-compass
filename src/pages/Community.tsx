@@ -61,7 +61,11 @@ const Community = () => {
       image: null,
       createdAt: "5시간 전",
       likes: 45,
-      comments: 23,
+      comments: [
+        { id: 4, user: "취준생", content: "오 좋은 팁이네요!", createdAt: "4시간 전" },
+        { id: 5, user: "대학생", content: "저도 써봐야겠어요", createdAt: "3시간 전" },
+        { id: 6, user: "직장인", content: "50분 집중 10분 휴식 정말 효과적이에요", createdAt: "2시간 전" }
+      ],
       isLiked: false
     },
     {
@@ -76,7 +80,10 @@ const Community = () => {
       image: "https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=400&h=300&fit=crop",
       createdAt: "1일 전",
       likes: 67,
-      comments: 31,
+      comments: [
+        { id: 7, user: "카페탐험가", content: "어디인지 알 수 있을까요?", createdAt: "1일 전" },
+        { id: 8, user: "서울숲러버", content: "저도 궁금해요!", createdAt: "20시간 전" }
+      ],
       isLiked: true
     }
   ]);
