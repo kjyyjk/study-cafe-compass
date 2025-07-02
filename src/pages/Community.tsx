@@ -1,17 +1,19 @@
-
 import { useState } from "react";
-import { MessageCircle, Heart, Share2, Plus, TrendingUp, Clock, User } from "lucide-react";
+import { MessageCircle, Heart, Share2, Plus, TrendingUp, Clock, User, Send } from "lucide-react";
+import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import BottomNavigation from "@/components/BottomNavigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
 
 const Community = () => {
   const [activeTab, setActiveTab] = useState<"hot" | "recent">("hot");
-
-  // 더미 커뮤니티 데이터
-  const posts = [
+  const [expandedPost, setExpandedPost] = useState<number | null>(null);
+  const [newComment, setNewComment] = useState<string>("");
+  const [posts, setPosts] = useState([
     {
       id: 1,
       user: {
@@ -24,7 +26,10 @@ const Community = () => {
       image: null,
       createdAt: "2시간 전",
       likes: 12,
-      comments: 8,
+      comments: [
+        { id: 1, user: "스터디맨", content: "메가커피 강남점 추천해요! 조용하고 콘센트도 많아요", createdAt: "1시간 전" },
+        { id: 2, user: "카페탐험가", content: "투썸플레이스도 괜찮아요. 좀 비싸긴 하지만 분위기 좋아요", createdAt: "30분 전" }
+      ],
       isLiked: false
     },
     {
@@ -39,7 +44,9 @@ const Community = () => {
       image: "https://images.unsplash.com/photo-1551218808-94e220e084d2?w=400&h=300&fit=crop",
       createdAt: "3시간 전",
       likes: 28,
-      comments: 15,
+      comments: [
+        { id: 3, user: "공부왕", content: "대박! 4시간이나 집중하셨다니 존경해요 👏", createdAt: "2시간 전" }
+      ],
       isLiked: true
     },
     {
@@ -72,16 +79,63 @@ const Community = () => {
       comments: 31,
       isLiked: true
     }
-  ];
+  ]);
+
+  const { toast } = useToast();
 
   const handleLike = (postId: number) => {
-    // 좋아요 기능 구현 (나중에 백엔드 연동)
-    console.log(`Post ${postId} liked`);
+    setPosts(prevPosts => 
+      prevPosts.map(post => 
+        post.id === postId 
+          ? { 
+              ...post, 
+              isLiked: !post.isLiked,
+              likes: post.isLiked ? post.likes - 1 : post.likes + 1
+            }
+          : post
+      )
+    );
+    
+    toast({
+      title: posts.find(p => p.id === postId)?.isLiked ? "좋아요 취소" : "좋아요! 👍",
+      description: "게시글에 반응을 남겼어요"
+    });
   };
 
   const handleShare = (postId: number) => {
-    // 공유 기능 구현
-    console.log(`Post ${postId} shared`);
+    toast({
+      title: "링크가 복사되었습니다",
+      description: "다른 사람들과 공유해보세요!"
+    });
+  };
+
+  const handleComment = (postId: number) => {
+    if (!newComment.trim()) return;
+
+    setPosts(prevPosts =>
+      prevPosts.map(post =>
+        post.id === postId
+          ? {
+              ...post,
+              comments: [
+                ...post.comments,
+                {
+                  id: Date.now(),
+                  user: "김세윤",
+                  content: newComment,
+                  createdAt: "방금 전"
+                }
+              ]
+            }
+          : post
+      )
+    );
+
+    setNewComment("");
+    toast({
+      title: "댓글이 작성되었습니다! 💬",
+      description: "다른 카공족들과 소통해보세요"
+    });
   };
 
   return (
@@ -112,10 +166,12 @@ const Community = () => {
         </div>
 
         {/* 글쓰기 버튼 */}
-        <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
-          <Plus className="w-4 h-4 mr-2" />
-          새 글 작성하기
-        </Button>
+        <Link to="/create-post">
+          <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
+            <Plus className="w-4 h-4 mr-2" />
+            새 글 작성하기
+          </Button>
+        </Link>
 
         {/* 게시글 리스트 */}
         <div className="space-y-3">
@@ -153,7 +209,7 @@ const Community = () => {
                 )}
 
                 {/* 액션 버튼들 */}
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-4">
                     <button 
                       onClick={() => handleLike(post.id)}
@@ -163,9 +219,12 @@ const Community = () => {
                       <span>{post.likes}</span>
                     </button>
                     
-                    <button className="flex items-center gap-1 text-sm text-muted-foreground hover:text-primary transition-colors">
+                    <button 
+                      onClick={() => setExpandedPost(expandedPost === post.id ? null : post.id)}
+                      className="flex items-center gap-1 text-sm text-muted-foreground hover:text-primary transition-colors"
+                    >
                       <MessageCircle className="w-4 h-4" />
-                      <span>{post.comments}</span>
+                      <span>{post.comments.length}</span>
                     </button>
                   </div>
 
@@ -177,6 +236,51 @@ const Community = () => {
                     <span>공유</span>
                   </button>
                 </div>
+
+                {/* 댓글 섹션 */}
+                {expandedPost === post.id && (
+                  <div className="border-t pt-3 mt-3">
+                    {/* 기존 댓글들 */}
+                    <div className="space-y-3 mb-3">
+                      {post.comments.map((comment) => (
+                        <div key={comment.id} className="flex gap-2">
+                          <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                            <User className="w-3 h-3 text-primary" />
+                          </div>
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="text-xs font-medium">{comment.user}</span>
+                              <span className="text-xs text-muted-foreground">{comment.createdAt}</span>
+                            </div>
+                            <p className="text-sm text-foreground">{comment.content}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* 댓글 작성 */}
+                    <div className="flex gap-2">
+                      <Input
+                        placeholder="댓글을 작성해보세요..."
+                        value={newComment}
+                        onChange={(e) => setNewComment(e.target.value)}
+                        className="flex-1"
+                        onKeyPress={(e) => {
+                          if (e.key === 'Enter') {
+                            handleComment(post.id);
+                          }
+                        }}
+                      />
+                      <Button
+                        size="sm"
+                        onClick={() => handleComment(post.id)}
+                        disabled={!newComment.trim()}
+                      >
+                        <Send className="w-3 h-3" />
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
           ))}

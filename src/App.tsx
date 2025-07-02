@@ -11,6 +11,10 @@ import StudyCheck from "./pages/StudyCheck";
 import MyPage from "./pages/MyPage";
 import Community from "./pages/Community";
 import Search from "./pages/Search";
+import MyReviews from "./pages/MyReviews";
+import MyFavorites from "./pages/MyFavorites";
+import MyCommunity from "./pages/MyCommunity";
+import CreatePost from "./pages/CreatePost";
 
 const queryClient = new QueryClient();
 
@@ -26,7 +30,11 @@ const App = () => (
           <Route path="/cafe/:id" element={<CafeDetail />} />
           <Route path="/study-check" element={<StudyCheck />} />
           <Route path="/community" element={<Community />} />
+          <Route path="/create-post" element={<CreatePost />} />
           <Route path="/mypage" element={<MyPage />} />
+          <Route path="/my-reviews" element={<MyReviews />} />
+          <Route path="/my-favorites" element={<MyFavorites />} />
+          <Route path="/my-community" element={<MyCommunity />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

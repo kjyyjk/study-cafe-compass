@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { ArrowLeft, Camera, MapPin, Clock, Upload, CheckCircle2, Star, Search, ChevronDown } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
@@ -67,13 +66,18 @@ const StudyCheck = () => {
     setCafeSearchQuery("");
   };
 
-  // 15분 단위 시간 생성
+  // 15분 단위, 정각 기준 시간 생성
   const generateTimeOptions = () => {
     const options = [];
     const now = new Date();
     for (let i = 0; i < 96; i++) { // 24시간 * 4 (15분 단위)
       const time = new Date(now);
       time.setMinutes(time.getMinutes() - (i * 15));
+      // 15분 단위로 정확히 맞춤
+      const minutes = Math.floor(time.getMinutes() / 15) * 15;
+      time.setMinutes(minutes);
+      time.setSeconds(0);
+      time.setMilliseconds(0);
       options.push(time);
     }
     return options;
@@ -82,12 +86,11 @@ const StudyCheck = () => {
   const timeOptions = generateTimeOptions();
 
   const formatTime = (date: Date) => {
-    return date.toLocaleString('ko-KR', {
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    return `${month}월 ${day}일 ${hours}:${minutes}`;
   };
 
   const handleSubmit = async () => {
@@ -341,8 +344,8 @@ const StudyCheck = () => {
                 {[
                   { value: "available", label: "콘센트 사용 가능" },
                   { value: "unavailable", label: "콘센트 사용 불가" },
-                  { value: "limited", label: "콘센트 좌석 여유" },
-                  { value: "full", label: "콘센트 좌석 없음" }
+                  { value: "seats-available", label: "콘센트 좌석 여유" },
+                  { value: "seats-full", label: "콘센트 좌석 없음" }
                 ].map((option) => (
                   <Button
                     key={option.value}

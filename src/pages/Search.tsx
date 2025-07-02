@@ -1,5 +1,5 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Search, MapPin, Star, Filter } from "lucide-react";
 import Header from "@/components/Header";
 import BottomNavigation from "@/components/BottomNavigation";
@@ -10,8 +10,16 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 
 const SearchPage = () => {
+  const [searchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState<"distance" | "rating" | "recent">("distance");
+
+  useEffect(() => {
+    const query = searchParams.get('q');
+    if (query) {
+      setSearchQuery(query);
+    }
+  }, [searchParams]);
 
   // 더미 검색 결과 데이터 - rating을 평균 별점으로 변경
   const searchResults = [
@@ -71,8 +79,24 @@ const SearchPage = () => {
     setSearchQuery(query);
   };
 
+  // 검색어로 필터링된 결과
+  const filteredResults = searchResults.filter(cafe => {
+    if (!searchQuery.trim()) return true;
+    const query = searchQuery.toLowerCase();
+    return cafe.name.toLowerCase().includes(query) || 
+           cafe.address.toLowerCase().includes(query) ||
+           cafe.features.some(feature => {
+             switch(feature) {
+               case "wifi": return "와이파이".includes(query) || "wifi".includes(query);
+               case "outlet": return "콘센트".includes(query) || "outlet".includes(query);
+               case "quiet": return "조용".includes(query) || "quiet".includes(query);
+               default: return false;
+             }
+           });
+  });
+
   // 정렬된 검색 결과
-  const sortedResults = [...searchResults].sort((a, b) => {
+  const sortedResults = [...filteredResults].sort((a, b) => {
     if (activeFilter === "rating") {
       return b.rating - a.rating;
     }
@@ -157,17 +181,17 @@ const SearchPage = () => {
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-medium text-foreground">
-              {searchQuery ? `'${searchQuery}' 검색 결과` : "내 주변 카페"} ({sortedResults.length}곳)
+              {searchQuery ? `'${searchQuery}' 검색 결과` : "내 주변 카페"} ({filteredResults.length}곳)
             </h3>
           </div>
           
-          {sortedResults.map((cafe) => (
+          {filteredResults.map((cafe) => (
             <CafeCard key={cafe.id} {...cafe} />
           ))}
         </div>
 
         {/* 검색 결과가 없을 때 */}
-        {searchQuery && sortedResults.length === 0 && (
+        {searchQuery && filteredResults.length === 0 && (
           <div className="text-center py-12 text-muted-foreground">
             <Search className="w-12 h-12 mx-auto mb-3 opacity-30" />
             <p>검색 결과가 없어요</p>

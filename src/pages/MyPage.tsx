@@ -1,5 +1,6 @@
 
 import { Calendar, Star, Trophy, MapPin, Camera, MessageCircle } from "lucide-react";
+import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import BottomNavigation from "@/components/BottomNavigation";
 import { Card, CardContent } from "@/components/ui/card";
@@ -88,35 +89,41 @@ const MyPage = () => {
 
         {/* 통계 카드들 */}
         <div className="grid grid-cols-2 gap-3">
-          <Card className="bg-white border-gray-200">
-            <CardContent className="p-4 text-center">
-              <Calendar className="w-6 h-6 text-primary mx-auto mb-2" />
-              <div className="text-2xl font-bold text-foreground">{user.studyDays}</div>
-              <div className="text-xs text-muted-foreground">총 카공 일수</div>
-            </CardContent>
-          </Card>
+          <Link to="/my-favorites">
+            <Card className="bg-white border-gray-200 hover:shadow-md transition-shadow cursor-pointer">
+              <CardContent className="p-4 text-center">
+                <MapPin className="w-6 h-6 text-orange-600 mx-auto mb-2" />
+                <div className="text-2xl font-bold text-foreground">{user.favoritesCafes}</div>
+                <div className="text-xs text-muted-foreground">즐겨찾는 카페</div>
+              </CardContent>
+            </Card>
+          </Link>
           
-          <Card className="bg-white border-gray-200">
-            <CardContent className="p-4 text-center">
-              <MapPin className="w-6 h-6 text-orange-600 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-foreground">{user.favoritesCafes}</div>
-              <div className="text-xs text-muted-foreground">즐겨찾는 카페</div>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-white border-gray-200">
-            <CardContent className="p-4 text-center">
-              <Star className="w-6 h-6 text-yellow-500 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-foreground">{user.writtenReviews}</div>
-              <div className="text-xs text-muted-foreground">작성한 리뷰</div>
-            </CardContent>
-          </Card>
+          <Link to="/my-reviews">
+            <Card className="bg-white border-gray-200 hover:shadow-md transition-shadow cursor-pointer">
+              <CardContent className="p-4 text-center">
+                <Star className="w-6 h-6 text-yellow-500 mx-auto mb-2" />
+                <div className="text-2xl font-bold text-foreground">{user.writtenReviews}</div>
+                <div className="text-xs text-muted-foreground">작성한 리뷰</div>
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Link to="/my-community">
+            <Card className="bg-white border-gray-200 hover:shadow-md transition-shadow cursor-pointer">
+              <CardContent className="p-4 text-center">
+                <MessageCircle className="w-6 h-6 text-blue-500 mx-auto mb-2" />
+                <div className="text-2xl font-bold text-foreground">12</div>
+                <div className="text-xs text-muted-foreground">커뮤니티 글</div>
+              </CardContent>
+            </Card>
+          </Link>
 
           <Card className="bg-white border-gray-200">
             <CardContent className="p-4 text-center">
-              <MessageCircle className="w-6 h-6 text-blue-500 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-foreground">12</div>
-              <div className="text-xs text-muted-foreground">커뮤니티 글</div>
+              <Calendar className="w-6 h-6 text-primary mx-auto mb-2" />
+              <div className="text-2xl font-bold text-foreground">{user.totalStudyTime}</div>
+              <div className="text-xs text-muted-foreground">총 공부시간</div>
             </CardContent>
           </Card>
         </div>

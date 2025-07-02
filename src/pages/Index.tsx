@@ -1,6 +1,6 @@
-
 import { useState } from "react";
 import { Search, Bookmark, TrendingUp } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import BottomNavigation from "@/components/BottomNavigation";
 import CafeCard from "@/components/CafeCard";
@@ -10,6 +10,8 @@ import { Badge } from "@/components/ui/badge";
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState<"nearby" | "saved">("nearby");
+  const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
 
   // 더미 데이터 - rating을 평균 별점으로 변경
   const nearbyCafes = [
@@ -60,6 +62,17 @@ const Index = () => {
 
   const popularTags = ["조용한", "콘센트많음", "24시간", "넓은테이블", "와이파이빠름"];
 
+  const handleSearch = (query: string) => {
+    if (query.trim()) {
+      navigate(`/search?q=${encodeURIComponent(query)}`);
+    }
+  };
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    handleSearch(searchQuery);
+  };
+
   return (
     <div className="min-h-screen bg-white pb-20">
       <Header 
@@ -69,20 +82,27 @@ const Index = () => {
       
       <div className="px-4 py-4 max-w-md mx-auto space-y-4">
         {/* 검색 바 */}
-        <div className="relative">
+        <form onSubmit={handleSearchSubmit} className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
           <Input 
             placeholder="카페 이름이나 지역을 검색해보세요"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10 bg-gray-50 border-gray-200"
           />
-        </div>
+        </form>
 
         {/* 인기 태그 */}
         <div className="space-y-2">
           <h3 className="text-sm font-medium text-foreground">인기 검색 태그</h3>
           <div className="flex flex-wrap gap-2">
             {popularTags.map((tag) => (
-              <Badge key={tag} variant="secondary" className="bg-gray-100 text-gray-700 hover:bg-gray-200">
+              <Badge 
+                key={tag} 
+                variant="secondary" 
+                className="bg-gray-100 text-gray-700 hover:bg-gray-200 cursor-pointer"
+                onClick={() => handleSearch(tag)}
+              >
                 #{tag}
               </Badge>
             ))}

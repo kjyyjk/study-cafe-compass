@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { 
@@ -142,18 +141,8 @@ const CafeDetail = () => {
                   <Star className="w-4 h-4 fill-current" />
                   <span className="font-semibold">{cafe.rating}</span>
                 </div>
+                <span className="text-xs text-muted-foreground">{cafe.distance}</span>
               </div>
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Users className="w-4 h-4 text-muted-foreground" />
-                <span className="text-sm">현재 상황</span>
-                <span className={`text-sm font-medium ${getCrowdColor(cafe.crowdLevel)}`}>
-                  {getCrowdText(cafe.crowdLevel)}
-                </span>
-              </div>
-              <span className="text-xs text-muted-foreground">{cafe.distance}</span>
             </div>
           </CardContent>
         </Card>
