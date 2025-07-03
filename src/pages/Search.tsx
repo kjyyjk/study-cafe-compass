@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Search, MapPin, Star, Filter } from "lucide-react";
@@ -95,18 +96,18 @@ const SearchPage = () => {
            });
   });
 
-  // 정렬된 검색 결과
+  // 정렬된 검색 결과 - 수정된 부분
   const sortedResults = [...filteredResults].sort((a, b) => {
-    if (activeFilter === "rating") {
-      return b.rating - a.rating;
+    switch (activeFilter) {
+      case "rating":
+        return b.rating - a.rating;
+      case "distance":
+        return a.distanceInMeters - b.distanceInMeters;
+      case "recent":
+        return b.lastReviewDate.getTime() - a.lastReviewDate.getTime();
+      default:
+        return 0;
     }
-    if (activeFilter === "distance") {
-      return a.distanceInMeters - b.distanceInMeters;
-    }
-    if (activeFilter === "recent") {
-      return b.lastReviewDate.getTime() - a.lastReviewDate.getTime();
-    }
-    return 0;
   });
 
   return (
@@ -181,17 +182,17 @@ const SearchPage = () => {
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-medium text-foreground">
-              {searchQuery ? `'${searchQuery}' 검색 결과` : "내 주변 카페"} ({filteredResults.length}곳)
+              {searchQuery ? `'${searchQuery}' 검색 결과` : "내 주변 카페"} ({sortedResults.length}곳)
             </h3>
           </div>
           
-          {filteredResults.map((cafe) => (
+          {sortedResults.map((cafe) => (
             <CafeCard key={cafe.id} {...cafe} />
           ))}
         </div>
 
         {/* 검색 결과가 없을 때 */}
-        {searchQuery && filteredResults.length === 0 && (
+        {searchQuery && sortedResults.length === 0 && (
           <div className="text-center py-12 text-muted-foreground">
             <Search className="w-12 h-12 mx-auto mb-3 opacity-30" />
             <p>검색 결과가 없어요</p>

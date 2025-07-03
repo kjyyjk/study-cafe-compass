@@ -15,6 +15,7 @@ import MyReviews from "./pages/MyReviews";
 import MyFavorites from "./pages/MyFavorites";
 import MyCommunity from "./pages/MyCommunity";
 import CreatePost from "./pages/CreatePost";
+import PostDetail from "./pages/PostDetail";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/study-check" element={<StudyCheck />} />
           <Route path="/community" element={<Community />} />
           <Route path="/create-post" element={<CreatePost />} />
+          <Route path="/post/:id" element={<PostDetail />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/my-reviews" element={<MyReviews />} />
           <Route path="/my-favorites" element={<MyFavorites />} />

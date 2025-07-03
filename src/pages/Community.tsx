@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { MessageCircle, Heart, Share2, Plus, TrendingUp, Clock, User, Send } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -6,13 +7,10 @@ import BottomNavigation from "@/components/BottomNavigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 
 const Community = () => {
   const [activeTab, setActiveTab] = useState<"hot" | "recent">("hot");
-  const [expandedPost, setExpandedPost] = useState<number | null>(null);
-  const [newComment, setNewComment] = useState<string>("");
   const [posts, setPosts] = useState([
     {
       id: 1,
@@ -116,35 +114,6 @@ const Community = () => {
     });
   };
 
-  const handleComment = (postId: number) => {
-    if (!newComment.trim()) return;
-
-    setPosts(prevPosts =>
-      prevPosts.map(post =>
-        post.id === postId
-          ? {
-              ...post,
-              comments: [
-                ...post.comments,
-                {
-                  id: Date.now(),
-                  user: "김세윤",
-                  content: newComment,
-                  createdAt: "방금 전"
-                }
-              ]
-            }
-          : post
-      )
-    );
-
-    setNewComment("");
-    toast({
-      title: "댓글이 작성되었습니다! 💬",
-      description: "다른 카공족들과 소통해보세요"
-    });
-  };
-
   return (
     <div className="min-h-screen bg-white pb-20">
       <Header title="커뮤니티" showNotification={true} />
@@ -200,8 +169,10 @@ const Community = () => {
                   </div>
                 </div>
 
-                {/* 제목 */}
-                <h3 className="font-semibold text-foreground mb-2">{post.title}</h3>
+                {/* 제목 - 클릭 시 상세 페이지로 이동 */}
+                <Link to={`/post/${post.id}`}>
+                  <h3 className="font-semibold text-foreground mb-2 hover:text-primary transition-colors cursor-pointer">{post.title}</h3>
+                </Link>
 
                 {/* 내용 */}
                 <p className="text-sm text-muted-foreground mb-3 line-clamp-3">{post.content}</p>
@@ -216,7 +187,7 @@ const Community = () => {
                 )}
 
                 {/* 액션 버튼들 */}
-                <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <button 
                       onClick={() => handleLike(post.id)}
@@ -226,13 +197,13 @@ const Community = () => {
                       <span>{post.likes}</span>
                     </button>
                     
-                    <button 
-                      onClick={() => setExpandedPost(expandedPost === post.id ? null : post.id)}
+                    <Link 
+                      to={`/post/${post.id}`}
                       className="flex items-center gap-1 text-sm text-muted-foreground hover:text-primary transition-colors"
                     >
                       <MessageCircle className="w-4 h-4" />
                       <span>{post.comments.length}</span>
-                    </button>
+                    </Link>
                   </div>
 
                   <button 
@@ -243,51 +214,6 @@ const Community = () => {
                     <span>공유</span>
                   </button>
                 </div>
-
-                {/* 댓글 섹션 */}
-                {expandedPost === post.id && (
-                  <div className="border-t pt-3 mt-3">
-                    {/* 기존 댓글들 */}
-                    <div className="space-y-3 mb-3">
-                      {post.comments.map((comment) => (
-                        <div key={comment.id} className="flex gap-2">
-                          <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-                            <User className="w-3 h-3 text-primary" />
-                          </div>
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className="text-xs font-medium">{comment.user}</span>
-                              <span className="text-xs text-muted-foreground">{comment.createdAt}</span>
-                            </div>
-                            <p className="text-sm text-foreground">{comment.content}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* 댓글 작성 */}
-                    <div className="flex gap-2">
-                      <Input
-                        placeholder="댓글을 작성해보세요..."
-                        value={newComment}
-                        onChange={(e) => setNewComment(e.target.value)}
-                        className="flex-1"
-                        onKeyPress={(e) => {
-                          if (e.key === 'Enter') {
-                            handleComment(post.id);
-                          }
-                        }}
-                      />
-                      <Button
-                        size="sm"
-                        onClick={() => handleComment(post.id)}
-                        disabled={!newComment.trim()}
-                      >
-                        <Send className="w-3 h-3" />
-                      </Button>
-                    </div>
-                  </div>
-                )}
               </CardContent>
             </Card>
           ))}
