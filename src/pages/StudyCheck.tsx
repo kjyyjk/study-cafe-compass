@@ -1,36 +1,28 @@
 
 import { useState } from "react";
-import { ArrowLeft, Camera, MapPin, Clock, Upload, CheckCircle2, Star, Search, ChevronDown, Calendar } from "lucide-react";
+import { ArrowLeft, Clock, Upload } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Calendar as CalendarComponent } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useToast } from "@/hooks/use-toast";
-import { format } from "date-fns";
-import { cn } from "@/lib/utils";
+import CafeSelector from "@/components/study-check/CafeSelector";
+import TimeSelector from "@/components/study-check/TimeSelector";
+import PhotoUpload from "@/components/study-check/PhotoUpload";
+import RatingSelector from "@/components/study-check/RatingSelector";
+import EnvironmentCheck from "@/components/study-check/EnvironmentCheck";
+import ReviewSection from "@/components/study-check/ReviewSection";
 
 const StudyCheck = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [review, setReview] = useState("");
   const [rating, setRating] = useState<number>(0);
-  const [hoveredRating, setHoveredRating] = useState<number>(0);
-  const [showCafeSearch, setShowCafeSearch] = useState(false);
-  const [cafeSearchQuery, setCafeSearchQuery] = useState("");
   const [selectedCafe, setSelectedCafe] = useState({
     name: "스타벅스 강남점",
     address: "서울 강남구 테헤란로 123",
     isVerified: true
   });
   const [selectedTime, setSelectedTime] = useState(new Date());
-  const [showTimeSelect, setShowTimeSelect] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const [selectedHour, setSelectedHour] = useState(new Date().getHours());
-  const [selectedMinute, setSelectedMinute] = useState(new Date().getMinutes());
   
   // 환경 체크 상태들
   const [outlet, setOutlet] = useState<string>("");
@@ -41,18 +33,6 @@ const StudyCheck = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  // 더미 카페 검색 결과
-  const searchResults = [
-    { id: "1", name: "스타벅스 강남점", address: "서울 강남구 테헤란로 123" },
-    { id: "2", name: "카페베네 역삼점", address: "서울 강남구 역삼동 456" },
-    { id: "3", name: "이디야커피 선릉점", address: "서울 강남구 선릉로 789" },
-  ];
-
-  const filteredCafes = searchResults.filter(cafe => 
-    cafe.name.toLowerCase().includes(cafeSearchQuery.toLowerCase()) ||
-    cafe.address.toLowerCase().includes(cafeSearchQuery.toLowerCase())
-  );
-
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -62,32 +42,6 @@ const StudyCheck = () => {
       };
       reader.readAsDataURL(file);
     }
-  };
-
-  const handleCafeSelect = (cafe: any) => {
-    setSelectedCafe({
-      name: cafe.name,
-      address: cafe.address,
-      isVerified: true
-    });
-    setShowCafeSearch(false);
-    setCafeSearchQuery("");
-  };
-
-  const handleTimeSelect = () => {
-    const newTime = new Date(selectedDate);
-    newTime.setHours(selectedHour);
-    newTime.setMinutes(selectedMinute);
-    setSelectedTime(newTime);
-    setShowTimeSelect(false);
-  };
-
-  const formatTime = (date: Date) => {
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    return `${month}월 ${day}일 ${hours}:${minutes}`;
   };
 
   const handleSubmit = async () => {
@@ -141,346 +95,47 @@ const StudyCheck = () => {
 
       <div className="px-4 py-4 max-w-md mx-auto space-y-4">
         {/* 카페 선택 */}
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-semibold flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-primary" />
-                카페 선택
-              </h3>
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => setShowCafeSearch(!showCafeSearch)}
-              >
-                <Search className="w-3 h-3 mr-1" />
-                변경
-              </Button>
-            </div>
-            
-            {!showCafeSearch ? (
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
-                  <MapPin className="w-5 h-5 text-primary" />
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <h4 className="font-semibold text-foreground">{selectedCafe.name}</h4>
-                    {selectedCafe.isVerified && (
-                      <Badge className="bg-green-100 text-green-700">위치 확인됨</Badge>
-                    )}
-                  </div>
-                  <p className="text-sm text-muted-foreground">{selectedCafe.address}</p>
-                </div>
-              </div>
-            ) : (
-              <div className="space-y-3">
-                <Input
-                  placeholder="카페 이름이나 주소를 검색하세요"
-                  value={cafeSearchQuery}
-                  onChange={(e) => setCafeSearchQuery(e.target.value)}
-                  className="w-full"
-                />
-                <div className="max-h-40 overflow-y-auto space-y-2">
-                  {filteredCafes.map((cafe) => (
-                    <div
-                      key={cafe.id}
-                      className="p-3 border rounded-lg cursor-pointer hover:bg-gray-50"
-                      onClick={() => handleCafeSelect(cafe)}
-                    >
-                      <h4 className="font-medium">{cafe.name}</h4>
-                      <p className="text-sm text-muted-foreground">{cafe.address}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+        <CafeSelector 
+          selectedCafe={selectedCafe}
+          onCafeSelect={setSelectedCafe}
+        />
 
         {/* 카공 시작 시간 */}
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-semibold flex items-center gap-2">
-                <Clock className="w-4 h-4 text-primary" />
-                카공 시작 시간
-              </h3>
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => setShowTimeSelect(!showTimeSelect)}
-              >
-                <ChevronDown className="w-3 h-3 mr-1" />
-                변경
-              </Button>
-            </div>
-            
-            {!showTimeSelect ? (
-              <p className="text-sm text-muted-foreground">{formatTime(selectedTime)}</p>
-            ) : (
-              <div className="space-y-4">
-                <div>
-                  <label className="text-sm font-medium mb-2 block">날짜 선택</label>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className={cn(
-                          "w-full justify-start text-left font-normal",
-                          !selectedDate && "text-muted-foreground"
-                        )}
-                      >
-                        <Calendar className="mr-2 h-4 w-4" />
-                        {selectedDate ? format(selectedDate, "yyyy년 MM월 dd일") : "날짜 선택"}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <CalendarComponent
-                        mode="single"
-                        selected={selectedDate}
-                        onSelect={(date) => date && setSelectedDate(date)}
-                        initialFocus
-                        className="pointer-events-auto"
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </div>
-                
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">시간</label>
-                    <select
-                      value={selectedHour}
-                      onChange={(e) => setSelectedHour(parseInt(e.target.value))}
-                      className="w-full p-2 border rounded-md text-sm"
-                    >
-                      {Array.from({ length: 24 }, (_, i) => (
-                        <option key={i} value={i}>
-                          {i.toString().padStart(2, '0')}시
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">분</label>
-                    <select
-                      value={selectedMinute}
-                      onChange={(e) => setSelectedMinute(parseInt(e.target.value))}
-                      className="w-full p-2 border rounded-md text-sm"
-                    >
-                      {Array.from({ length: 60 }, (_, i) => (
-                        <option key={i} value={i}>
-                          {i.toString().padStart(2, '0')}분
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-                
-                <Button onClick={handleTimeSelect} className="w-full">
-                  시간 설정 완료
-                </Button>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+        <TimeSelector 
+          selectedTime={selectedTime}
+          onTimeSelect={setSelectedTime}
+        />
 
         {/* 인증 사진 업로드 */}
-        <Card>
-          <CardContent className="p-4">
-            <h3 className="font-semibold mb-3 flex items-center gap-2">
-              <Camera className="w-4 h-4 text-primary" />
-              공부 인증 사진
-            </h3>
-            
-            {!selectedImage ? (
-              <label className="block">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  className="hidden"
-                  capture="environment"
-                />
-                <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center cursor-pointer hover:border-primary transition-colors">
-                  <Camera className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-                  <p className="text-sm text-muted-foreground mb-1">공부하는 모습을 사진으로 찍어주세요</p>
-                  <p className="text-xs text-muted-foreground">책상, 노트, 노트북 등이 보이면 좋아요!</p>
-                </div>
-              </label>
-            ) : (
-              <div className="relative">
-                <img 
-                  src={selectedImage} 
-                  alt="업로드된 사진"
-                  className="w-full h-48 object-cover rounded-xl"
-                />
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  className="absolute top-2 right-2"
-                  onClick={() => setSelectedImage(null)}
-                >
-                  다시 찍기
-                </Button>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+        <PhotoUpload 
+          selectedImage={selectedImage}
+          onImageUpload={handleImageUpload}
+          onImageRemove={() => setSelectedImage(null)}
+        />
 
         {/* 카공 점수 평가 */}
-        <Card>
-          <CardContent className="p-4">
-            <h3 className="font-semibold mb-4 flex items-center gap-2">
-              <Star className="w-4 h-4 text-primary" />
-              카공 점수 평가
-            </h3>
-            
-            <div className="text-center">
-              <p className="text-sm text-muted-foreground mb-3">이 카페의 카공 환경은 어떠셨나요?</p>
-              <div className="flex items-center justify-center gap-1 mb-2">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <button
-                    key={star}
-                    onClick={() => setRating(star)}
-                    onMouseEnter={() => setHoveredRating(star)}
-                    onMouseLeave={() => setHoveredRating(0)}
-                    className="p-1 transition-colors"
-                  >
-                    <Star 
-                      className={`w-8 h-8 ${
-                        star <= (hoveredRating || rating) 
-                          ? "fill-yellow-400 text-yellow-400" 
-                          : "text-gray-300"
-                      }`}
-                    />
-                  </button>
-                ))}
-              </div>
-              {rating > 0 && (
-                <p className="text-sm font-medium text-primary">
-                  {rating === 1 && "아쉬워요"}
-                  {rating === 2 && "별로예요"}
-                  {rating === 3 && "보통이에요"}
-                  {rating === 4 && "좋아요"}
-                  {rating === 5 && "최고예요"}
-                </p>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+        <RatingSelector 
+          rating={rating}
+          onRatingChange={setRating}
+        />
 
         {/* 카페 환경 체크 */}
-        <Card>
-          <CardContent className="p-4">
-            <h3 className="font-semibold mb-4 flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-primary" />
-              카페 환경 체크
-            </h3>
-            
-            {/* 콘센트 */}
-            <div className="space-y-3 mb-4">
-              <h4 className="text-sm font-medium">콘센트</h4>
-              <div className="flex flex-wrap gap-2">
-                {[
-                  { value: "seats-available", label: "콘센트 좌석 여유" },
-                  { value: "seats-full", label: "콘센트 좌석 없음" },
-                  { value: "unavailable", label: "콘센트 사용 불가" }
-                ].map((option) => (
-                  <Button
-                    key={option.value}
-                    variant={outlet === option.value ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setOutlet(outlet === option.value ? "" : option.value)}
-                  >
-                    {option.label}
-                  </Button>
-                ))}
-              </div>
-            </div>
-
-            {/* 소음 */}
-            <div className="space-y-3 mb-4">
-              <h4 className="text-sm font-medium">소음 정도</h4>
-              <div className="flex flex-wrap gap-2">
-                {[
-                  { value: "quiet", label: "조용함" },
-                  { value: "normal", label: "보통" },
-                  { value: "noisy", label: "시끄러움" }
-                ].map((option) => (
-                  <Button
-                    key={option.value}
-                    variant={noise === option.value ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setNoise(noise === option.value ? "" : option.value)}
-                  >
-                    {option.label}
-                  </Button>
-                ))}
-              </div>
-            </div>
-
-            {/* 와이파이 */}
-            <div className="space-y-3 mb-4">
-              <h4 className="text-sm font-medium">와이파이</h4>
-              <div className="flex flex-wrap gap-2">
-                {[
-                  { value: "fast", label: "빠름" },
-                  { value: "normal", label: "보통" },
-                  { value: "slow", label: "느림" }
-                ].map((option) => (
-                  <Button
-                    key={option.value}
-                    variant={wifi === option.value ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setWifi(wifi === option.value ? "" : option.value)}
-                  >
-                    {option.label}
-                  </Button>
-                ))}
-              </div>
-            </div>
-
-            {/* 좌석 */}
-            <div className="space-y-3">
-              <h4 className="text-sm font-medium">좌석 상황</h4>
-              <div className="flex flex-wrap gap-2">
-                {[
-                  { value: "spacious", label: "여유로움" },
-                  { value: "normal", label: "보통" },
-                  { value: "crowded", label: "붐빔" }
-                ].map((option) => (
-                  <Button
-                    key={option.value}
-                    variant={seat === option.value ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setSeat(seat === option.value ? "" : option.value)}
-                  >
-                    {option.label}
-                  </Button>
-                ))}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <EnvironmentCheck 
+          outlet={outlet}
+          noise={noise}
+          wifi={wifi}
+          seat={seat}
+          onOutletChange={setOutlet}
+          onNoiseChange={setNoise}
+          onWifiChange={setWifi}
+          onSeatChange={setSeat}
+        />
 
         {/* 간단 후기 */}
-        <Card>
-          <CardContent className="p-4">
-            <h3 className="font-semibold mb-3">오늘의 카공 후기 (선택)</h3>
-            <Textarea
-              placeholder="오늘 이 카페에서 공부한 느낌을 간단히 남겨보세요! 다른 카공족들에게 도움이 될 거예요."
-              value={review}
-              onChange={(e) => setReview(e.target.value)}
-              className="min-h-[80px] bg-white border-gray-200"
-            />
-            <p className="text-xs text-muted-foreground mt-2">
-              💡 개인적인 팁이나 추천사항을 공유해주세요!
-            </p>
-          </CardContent>
-        </Card>
+        <ReviewSection 
+          review={review}
+          onReviewChange={setReview}
+        />
 
         {/* 예상 리워드 */}
         <Card className="bg-gradient-to-r from-blue-50 to-purple-50">
