@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { MessageCircle, Heart, Share2, Plus, TrendingUp, Clock, User, Send } from "lucide-react";
+import { MessageCircle, Heart, Share2, Plus, TrendingUp, Clock, User } from "lucide-react";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import BottomNavigation from "@/components/BottomNavigation";
@@ -93,7 +93,7 @@ const Community = () => {
     if (activeTab === "hot") {
       return b.likes - a.likes; // 좋아요 많은 순
     } else {
-      // 최신순 정렬 (시간 문자열을 간단히 비교)
+      // 최신순 정렬
       const timeA = a.createdAt.includes("시간") ? parseInt(a.createdAt) : 
                    a.createdAt.includes("일") ? parseInt(a.createdAt) * 24 : 0;
       const timeB = b.createdAt.includes("시간") ? parseInt(b.createdAt) : 

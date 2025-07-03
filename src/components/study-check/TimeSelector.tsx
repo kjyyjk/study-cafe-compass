@@ -15,9 +15,9 @@ interface TimeSelectorProps {
 
 const TimeSelector = ({ selectedTime, onTimeSelect }: TimeSelectorProps) => {
   const [showTimeSelect, setShowTimeSelect] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const [selectedHour, setSelectedHour] = useState(new Date().getHours());
-  const [selectedMinute, setSelectedMinute] = useState(new Date().getMinutes());
+  const [selectedDate, setSelectedDate] = useState<Date>(selectedTime);
+  const [selectedHour, setSelectedHour] = useState(selectedTime.getHours());
+  const [selectedMinute, setSelectedMinute] = useState(selectedTime.getMinutes());
 
   const formatTime = (date: Date) => {
     const hours = date.getHours().toString().padStart(2, '0');
@@ -53,74 +53,75 @@ const TimeSelector = ({ selectedTime, onTimeSelect }: TimeSelectorProps) => {
           </Button>
         </div>
         
-        {!showTimeSelect ? (
+        <div className="space-y-3">
           <p className="text-sm text-muted-foreground">{formatTime(selectedTime)}</p>
-        ) : (
-          <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium mb-2 block">날짜 선택</label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className={cn(
-                      "w-full justify-start text-left font-normal",
-                      !selectedDate && "text-muted-foreground"
-                    )}
-                  >
-                    <Calendar className="mr-2 h-4 w-4" />
-                    {selectedDate ? format(selectedDate, "yyyy년 MM월 dd일") : "날짜 선택"}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <CalendarComponent
-                    mode="single"
-                    selected={selectedDate}
-                    onSelect={(date) => date && setSelectedDate(date)}
-                    initialFocus
-                    className="pointer-events-auto"
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
-            
-            <div className="grid grid-cols-2 gap-3">
+          
+          {showTimeSelect && (
+            <div className="space-y-4 border-t pt-3">
               <div>
-                <label className="text-sm font-medium mb-2 block">시간</label>
-                <select
-                  value={selectedHour}
-                  onChange={(e) => setSelectedHour(parseInt(e.target.value))}
-                  className="w-full p-2 border rounded-md text-sm"
-                >
-                  {Array.from({ length: 24 }, (_, i) => (
-                    <option key={i} value={i}>
-                      {i.toString().padStart(2, '0')}시
-                    </option>
-                  ))}
-                </select>
+                <label className="text-sm font-medium mb-2 block">날짜 선택</label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        "w-full justify-start text-left font-normal",
+                        !selectedDate && "text-muted-foreground"
+                      )}
+                    >
+                      <Calendar className="mr-2 h-4 w-4" />
+                      {selectedDate ? format(selectedDate, "yyyy년 MM월 dd일") : "날짜 선택"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <CalendarComponent
+                      mode="single"
+                      selected={selectedDate}
+                      onSelect={(date) => date && setSelectedDate(date)}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
               </div>
               
-              <div>
-                <label className="text-sm font-medium mb-2 block">분</label>
-                <select
-                  value={selectedMinute}
-                  onChange={(e) => setSelectedMinute(parseInt(e.target.value))}
-                  className="w-full p-2 border rounded-md text-sm"
-                >
-                  {Array.from({ length: 60 }, (_, i) => (
-                    <option key={i} value={i}>
-                      {i.toString().padStart(2, '0')}분
-                    </option>
-                  ))}
-                </select>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-sm font-medium mb-2 block">시간</label>
+                  <select
+                    value={selectedHour}
+                    onChange={(e) => setSelectedHour(parseInt(e.target.value))}
+                    className="w-full p-2 border rounded-md text-sm"
+                  >
+                    {Array.from({ length: 24 }, (_, i) => (
+                      <option key={i} value={i}>
+                        {i.toString().padStart(2, '0')}시
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                
+                <div>
+                  <label className="text-sm font-medium mb-2 block">분</label>
+                  <select
+                    value={selectedMinute}
+                    onChange={(e) => setSelectedMinute(parseInt(e.target.value))}
+                    className="w-full p-2 border rounded-md text-sm"
+                  >
+                    {Array.from({ length: 60 }, (_, i) => (
+                      <option key={i} value={i}>
+                        {i.toString().padStart(2, '0')}분
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
+              
+              <Button onClick={handleTimeSelect} className="w-full">
+                시간 설정 완료
+              </Button>
             </div>
-            
-            <Button onClick={handleTimeSelect} className="w-full">
-              시간 설정 완료
-            </Button>
-          </div>
-        )}
+          )}
+        </div>
       </CardContent>
     </Card>
   );

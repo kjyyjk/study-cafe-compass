@@ -22,7 +22,6 @@ const SearchPage = () => {
     }
   }, [searchParams]);
 
-  // 더미 검색 결과 데이터 - rating을 평균 별점으로 변경
   const searchResults = [
     {
       id: "1",
@@ -96,7 +95,7 @@ const SearchPage = () => {
            });
   });
 
-  // 정렬된 검색 결과 - 수정된 부분
+  // 정렬된 검색 결과
   const sortedResults = [...filteredResults].sort((a, b) => {
     switch (activeFilter) {
       case "rating":

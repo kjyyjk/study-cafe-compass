@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Search, Bookmark, TrendingUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -13,7 +14,6 @@ const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
-  // 더미 데이터 - rating을 평균 별점으로 변경
   const nearbyCafes = [
     {
       id: "1",
