@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { 
@@ -11,7 +12,8 @@ import {
   Volume2,
   Clock,
   Users,
-  Camera
+  Camera,
+  ChevronRight
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -41,12 +43,6 @@ const CafeDetail = () => {
       quiet: { score: 75, label: "조용함" },
       seat: { score: 80, label: "좌석 편의성" }
     },
-    crowdByHour: [
-      { hour: "09", level: 30 }, { hour: "10", level: 45 }, { hour: "11", level: 60 },
-      { hour: "12", level: 85 }, { hour: "13", level: 90 }, { hour: "14", level: 70 },
-      { hour: "15", level: 55 }, { hour: "16", level: 65 }, { hour: "17", level: 80 },
-      { hour: "18", level: 75 }, { hour: "19", level: 60 }, { hour: "20", level: 40 }
-    ],
     recentReviews: [
       {
         id: 1,
@@ -68,24 +64,6 @@ const CafeDetail = () => {
         createdAt: "1일 전"
       }
     ]
-  };
-
-  const getCrowdText = (level: string) => {
-    switch(level) {
-      case "low": return "여유로움";
-      case "medium": return "보통";
-      case "high": return "혼잡함";
-      default: return "알 수 없음";
-    }
-  };
-
-  const getCrowdColor = (level: string) => {
-    switch(level) {
-      case "low": return "text-green-600";
-      case "medium": return "text-yellow-600";
-      case "high": return "text-red-600";
-      default: return "text-gray-600";
-    }
   };
 
   return (
@@ -171,35 +149,17 @@ const CafeDetail = () => {
           </CardContent>
         </Card>
 
-        {/* 시간대별 혼잡도 */}
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <Clock className="w-4 h-4 text-cafe-600" />
-              <h3 className="font-semibold">시간대별 혼잡도</h3>
-            </div>
-            <div className="grid grid-cols-6 gap-2">
-              {cafe.crowdByHour.map(({ hour, level }) => (
-                <div key={hour} className="text-center">
-                  <div className="text-xs text-muted-foreground mb-1">{hour}시</div>
-                  <div 
-                    className={`h-8 rounded-sm ${
-                      level < 40 ? "bg-green-200" : 
-                      level < 70 ? "bg-yellow-200" : "bg-red-200"
-                    }`}
-                    style={{ height: `${Math.max(level * 0.3, 8)}px` }}
-                  ></div>
-                  <div className="text-xs text-muted-foreground mt-1">{level}%</div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
         {/* 최근 리뷰 */}
         <Card>
           <CardContent className="p-4">
-            <h3 className="font-semibold mb-3">최근 카공 후기</h3>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-semibold">최근 카공 후기</h3>
+              <Link to={`/cafe/${id}/reviews`}>
+                <Button variant="ghost" size="sm" className="text-primary p-0">
+                  더보기 <ChevronRight className="w-4 h-4 ml-1" />
+                </Button>
+              </Link>
+            </div>
             <div className="space-y-4">
               {cafe.recentReviews.map((review) => (
                 <div key={review.id} className="border-b border-border last:border-0 pb-4 last:pb-0">

@@ -88,6 +88,20 @@ const Community = () => {
 
   const { toast } = useToast();
 
+  // 정렬된 게시글 목록
+  const sortedPosts = [...posts].sort((a, b) => {
+    if (activeTab === "hot") {
+      return b.likes - a.likes; // 좋아요 많은 순
+    } else {
+      // 최신순 정렬 (시간 문자열을 간단히 비교)
+      const timeA = a.createdAt.includes("시간") ? parseInt(a.createdAt) : 
+                   a.createdAt.includes("일") ? parseInt(a.createdAt) * 24 : 0;
+      const timeB = b.createdAt.includes("시간") ? parseInt(b.createdAt) : 
+                   b.createdAt.includes("일") ? parseInt(b.createdAt) * 24 : 0;
+      return timeA - timeB; // 최신순
+    }
+  });
+
   const handleLike = (postId: number) => {
     setPosts(prevPosts => 
       prevPosts.map(post => 
@@ -151,7 +165,7 @@ const Community = () => {
 
         {/* 게시글 리스트 */}
         <div className="space-y-3">
-          {posts.map((post) => (
+          {sortedPosts.map((post) => (
             <Card key={post.id} className="bg-white border-gray-200 hover:shadow-md transition-shadow">
               <CardContent className="p-4">
                 {/* 작성자 정보 */}

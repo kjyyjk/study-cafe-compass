@@ -98,7 +98,9 @@ const MyCommunity = () => {
             {myPosts.map((post) => (
               <Card key={post.id} className="bg-white border-gray-200">
                 <CardContent className="p-4">
-                  <h3 className="font-semibold text-foreground mb-2">{post.title}</h3>
+                  <Link to={`/post/${post.id}`}>
+                    <h3 className="font-semibold text-foreground mb-2 hover:text-primary transition-colors cursor-pointer">{post.title}</h3>
+                  </Link>
                   <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{post.content}</p>
                   
                   <div className="flex items-center justify-between">
@@ -134,7 +136,9 @@ const MyCommunity = () => {
                     <span className="text-xs text-muted-foreground">{post.createdAt}</span>
                   </div>
                   
-                  <h3 className="font-semibold text-foreground mb-2">{post.title}</h3>
+                  <Link to={`/post/${post.id}`}>
+                    <h3 className="font-semibold text-foreground mb-2 hover:text-primary transition-colors cursor-pointer">{post.title}</h3>
+                  </Link>
                   <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{post.content}</p>
                   
                   <div className="flex items-center gap-4">

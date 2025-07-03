@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import CafeDetail from "./pages/CafeDetail";
+import CafeReviews from "./pages/CafeReviews";
 import StudyCheck from "./pages/StudyCheck";
 import MyPage from "./pages/MyPage";
 import Community from "./pages/Community";
@@ -29,6 +30,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/search" element={<Search />} />
           <Route path="/cafe/:id" element={<CafeDetail />} />
+          <Route path="/cafe/:id/reviews" element={<CafeReviews />} />
           <Route path="/study-check" element={<StudyCheck />} />
           <Route path="/community" element={<Community />} />
           <Route path="/create-post" element={<CreatePost />} />
